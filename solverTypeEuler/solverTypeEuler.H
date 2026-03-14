@@ -14,9 +14,8 @@
             // Move the mesh
             mesh.move();
         }
-
+	
         // --- Directed interpolation of primitive fields onto faces
-
         surfaceScalarField rho_pos(interpolate(rho, pos));
         surfaceScalarField rho_neg(interpolate(rho, neg));
 
@@ -134,6 +133,9 @@
         // --- Solve momentum
         #include "rhoUEqn.H"
 
+        // --- Solve species
+        #include "rhoYEqn.H"
+
         // --- Solve energy
         #include "rhoEEqn.H"
 
@@ -142,7 +144,7 @@
 
         runTime.write();
 
-	        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
     }

@@ -31,6 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "fvModels.H"
 #include "psiReactionThermo.H"
 #include "combustionModel.H"
 #include "fluidReactionThermophysicalTransportModel.H"

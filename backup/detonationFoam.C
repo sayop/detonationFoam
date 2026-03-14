@@ -21,27 +21,53 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Global
-    setDeltaT
+Application
+    rhoCentralFoam
 
 Description
-    Reset the timestep to maintain a constant maximum courant Number.
-    Reduction of time-step is immediate, but increase is damped to avoid
-    unstable oscillations.
+    Density-based compressible flow solver based on central-upwind schemes of
+    Kurganov and Tadmor with support for mesh-motion and topology changes.
 
 \*---------------------------------------------------------------------------*/
 
-if (adjustTimeStep)
-{
-    scalar deltaT = maxCo*runTime.deltaTValue()/(CoNum + small);
-    deltaT = min
-    (
-        min(deltaT, runTime.deltaTValue() + 0.1*deltaT),
-        1.2*runTime.deltaTValue()
-    );
-    runTime.setDeltaT(min(deltaT, maxDeltaT));
+#include "fvCFD.H"
+#include "psiReactionThermo.H"
+#include "combustionModel.H"
+#include "fluidReactionThermophysicalTransportModel.H"
+#include "fixedRhoFvPatchScalarField.H"
+#include "directionInterpolate.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
-    Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+int main(int argc, char *argv[])
+{
+    #define NO_CONTROL
+    #include "postProcess.H"
+
+    #include "setRootCaseLists.H"
+    #include "createTime.H"
+    #include "createMesh.H"
+    #include "createFields.H"
+    #include "createFieldRefs.H"
+    #include "createTimeControls.H"
+
+    turbulence->validate();
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    #include "readFluxScheme.H"
+
+    dimensionedScalar v_zero("v_zero", dimVolume/dimTime, 0.0);
+
+    // Courant numbers used to adjust the time-step
+    scalar CoNum = 0.0;
+    scalar meanCoNum = 0.0;
+
+    Info<< "\nStarting time loop\n" << endl;
+
+    #include "solverTypeEuler.H"
 }
 
 // ************************************************************************* //

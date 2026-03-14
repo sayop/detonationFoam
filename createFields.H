@@ -9,13 +9,13 @@ basicSpecieMixture& composition = thermo.composition();
 PtrList<volScalarField>& Y = composition.Y();
 PtrList<volScalarField> rhoY(Y.size());
 
-const word inertSpecie(thermo.properties().lookup("inertSpecie"));
-if (!composition.species().found(inertSpecie))
-{
-    FatalErrorInFunction
-        << "Inert specie " << inertSpecie << " not found in available species "
-        << composition.species() << exit(FatalError);
-}
+//const word inertSpecie(thermo.properties().lookup("inertSpecie"));
+//if (!composition.species().found(inertSpecie))
+//{
+//    FatalErrorInFunction
+//        << "Inert specie " << inertSpecie << " not found in available species "
+//        << composition.species() << exit(FatalError);
+//}
 
 Info<< "Reading field U\n" << endl;
 volVectorField U
@@ -118,3 +118,8 @@ thermophysicalTransport
         thermo
     )
 );
+
+Info<< "Creating reaction model\n" << endl;
+autoPtr<combustionModel> reaction(combustionModel::New(thermo, turbulence()));
+
+#include "createFvModels.H"

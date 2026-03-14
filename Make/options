@@ -2,6 +2,7 @@ EXE_INC = \
     -I$(FOAM_SOLVERS)/compressible/rhoCentralFoam/BCs/lnInclude \
     -IsolverTypeEuler \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
